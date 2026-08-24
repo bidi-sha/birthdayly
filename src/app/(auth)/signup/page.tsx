@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { signup } from './actions'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
+import BearMascot from '@/components/ui/BearMascot'
 
 export default async function SignupPage({
   searchParams,
@@ -12,7 +13,9 @@ export default async function SignupPage({
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-[var(--radius-card)] shadow-sm p-8">
+      <div className="w-full max-w-md bg-white rounded-[var(--radius-card)] shadow-sm p-8 relative overflow-visible">
+        <BearMascot variant="gift" size={90} className="absolute -top-10 right-6" />
+
         <h1 className="text-2xl font-bold text-gray-900 mb-1">Create your account 💜</h1>
         <p className="text-gray-500 mb-6">Start adding birthdays and never miss a special day again.</p>
 
@@ -23,34 +26,10 @@ export default async function SignupPage({
         )}
 
         <form action={signup} className="space-y-4">
-          <Input
-            id="fullName"
-            name="fullName"
-            type="text"
-            label="Full name"
-            required
-            placeholder="Enter your name"
-          />
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            label="Email"
-            required
-            placeholder="you@example.com"
-          />
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            label="Password"
-            required
-            minLength={6}
-            placeholder="Create a password"
-          />
-          <Button type="submit" fullWidth>
-            Sign up
-          </Button>
+          <Input id="fullName" name="fullName" type="text" label="Full name" required placeholder="Enter your name" />
+          <Input id="email" name="email" type="email" label="Email" required placeholder="you@example.com" />
+          <Input id="password" name="password" type="password" label="Password" required minLength={6} placeholder="Create a password" />
+          <Button type="submit" fullWidth>Sign up</Button>
         </form>
 
         <div className="flex items-center gap-3 my-6">
