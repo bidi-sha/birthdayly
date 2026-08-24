@@ -1,0 +1,47 @@
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Home, Search, Plus, Calendar, Settings } from 'lucide-react'
+
+export default function BottomNav() {
+  const pathname = usePathname()
+
+  const items = [
+    { href: '/dashboard', icon: Home },
+    { href: '/dashboard?search=1', icon: Search },
+    { href: '/dashboard?add=1', icon: Plus, isFab: true },
+    { href: '/dashboard/calendar', icon: Calendar },
+    { href: '/dashboard/settings', icon: Settings },
+  ]
+
+  return (
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-[var(--color-border)] px-6 py-3">
+      <div className="flex items-center justify-between">
+        {items.map(({ href, icon: Icon, isFab }, i) => {
+          const active = pathname === href
+          if (isFab) {
+            return (
+              <Link
+                key={i}
+                href={href}
+                className="flex items-center justify-center w-12 h-12 rounded-full bg-[var(--color-primary)] text-white -mt-6 shadow-lg"
+              >
+                <Icon size={22} />
+              </Link>
+            )
+          }
+          return (
+            <Link
+              key={i}
+              href={href}
+              className={active ? 'text-[var(--color-primary)]' : 'text-gray-400'}
+            >
+              <Icon size={20} />
+            </Link>
+          )
+        })}
+      </div>
+    </nav>
+  )
+}
