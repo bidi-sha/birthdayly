@@ -1,19 +1,35 @@
 import { createClient } from '@/lib/supabase/server'
-import LogoutButton from '@/components/layout/LogoutButton'
+import { redirect } from 'next/navigation'
+import { enrichAndSortBirthdays } from '@/lib/birthday-utils'
+import DashboardClient from '@/components/dashboard/DashboardClient'
+import type { Birthday } from '@/types/birthday'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
+
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  return (
-    <div className="min-h-screen bg-[#F5F3FB] p-8">
-      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-sm p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">You&apos;re logged in! 🎉</h1>
-        <p className="text-gray-500 mb-6">Signed in as {user?.email}</p>
-        <LogoutButton />
+  if (!user) {
+    redirect('/login')
+  }
+
+  const { data: birthdays, error } = await supabase
+    .from('birthdays')
+    .select('*')
+    .returns<Birthday[]>()
+
+  if (error) {
+    return (
+      <div className="p-8 text-center text-red-500">
+        Something went wrong loading your birthdays. Please try refreshing.
       </div>
-    </div>
-  )
+    )
+  }
+
+  const enriched = enrichAndSortBirthdays(birthdays ?? [])
+  const greetingName = (user.user_metadata?.full_name as string | undefined)?.split(' ')[0] ?? 'there'
+
+  return <DashboardClient birthdays={enriched} greetingName={greetingName} />
 }
