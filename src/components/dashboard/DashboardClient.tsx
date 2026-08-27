@@ -1,13 +1,17 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Search, Plus } from 'lucide-react'
 import Chip from '@/components/ui/Chip'
 import Button from '@/components/ui/Button'
+import Modal from '@/components/ui/Modal'
 import StatsRow from './StatsRow'
 import EmptyState from './EmptyState'
 import BirthdayCard from '@/components/birthday/BirthdayCard'
 import TodayCelebration from '@/components/birthday/TodayCelebration'
+import BirthdayForm from '@/components/birthday/BirthdayForm'
+import DeleteConfirmDialog from '@/components/birthday/DeleteConfirmDialog'
 import type { BirthdayWithMeta } from '@/types/birthday'
 
 type FilterOption = 'all' | 'month' | '3months'
@@ -18,8 +22,13 @@ interface DashboardClientProps {
 }
 
 export default function DashboardClient({ birthdays, greetingName }: DashboardClientProps) {
+  const router = useRouter()
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState<FilterOption>('all')
+
+  const [addOpen, setAddOpen] = useState(false)
+  const [editTarget, setEditTarget] = useState<BirthdayWithMeta | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<BirthdayWithMeta | null>(null)
 
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
@@ -38,6 +47,11 @@ export default function DashboardClient({ birthdays, greetingName }: DashboardCl
   }, [birthdays, search, filter])
 
   const thisMonthCount = useMemo(() => birthdays.filter((b) => b.isThisMonth).length, [birthdays])
+
+  const refreshAndClose = (closeFn: () => void) => {
+    closeFn()
+    router.refresh()
+  }
 
   return (
     <div className="p-4 md:p-8 max-w-3xl mx-auto space-y-6">
@@ -63,7 +77,7 @@ export default function DashboardClient({ birthdays, greetingName }: DashboardCl
             className="w-full rounded-xl border border-[var(--color-border)] pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
           />
         </div>
-        <Button disabled title="Coming in Phase 10" className="shrink-0 flex items-center gap-1.5">
+        <Button onClick={() => setAddOpen(true)} className="shrink-0 flex items-center gap-1.5">
           <Plus size={16} />
           <span className="hidden sm:inline">Add Birthday</span>
         </Button>
@@ -78,15 +92,55 @@ export default function DashboardClient({ birthdays, greetingName }: DashboardCl
       <div>
         <h2 className="text-sm font-semibold text-gray-700 mb-3">Upcoming Birthdays</h2>
         {filteredBirthdays.length === 0 ? (
-          <EmptyState variant={birthdays.length === 0 ? 'no-birthdays' : 'no-results'} />
+          <EmptyState
+            variant={birthdays.length === 0 ? 'no-birthdays' : 'no-results'}
+            onAddClick={() => setAddOpen(true)}
+          />
         ) : (
           <div className="space-y-3">
             {filteredBirthdays.map((b) => (
-              <BirthdayCard key={b.id} birthday={b} />
+              <BirthdayCard
+                key={b.id}
+                birthday={b}
+                onEdit={setEditTarget}
+                onDelete={setDeleteTarget}
+              />
             ))}
           </div>
         )}
       </div>
+
+      {/* Add Birthday modal */}
+      <Modal isOpen={addOpen} onClose={() => setAddOpen(false)} title="Add New Birthday">
+        <BirthdayForm
+          mode="add"
+          onCancel={() => setAddOpen(false)}
+          onSuccess={() => refreshAndClose(() => setAddOpen(false))}
+        />
+      </Modal>
+
+      {/* Edit Birthday modal */}
+      <Modal isOpen={!!editTarget} onClose={() => setEditTarget(null)} title="Edit Birthday">
+        {editTarget && (
+          <BirthdayForm
+            mode="edit"
+            birthday={editTarget}
+            onCancel={() => setEditTarget(null)}
+            onSuccess={() => refreshAndClose(() => setEditTarget(null))}
+          />
+        )}
+      </Modal>
+
+      {/* Delete confirmation */}
+      {deleteTarget && (
+        <DeleteConfirmDialog
+          isOpen={!!deleteTarget}
+          birthdayId={deleteTarget.id}
+          birthdayName={deleteTarget.name}
+          onClose={() => setDeleteTarget(null)}
+          onDeleted={() => refreshAndClose(() => setDeleteTarget(null))}
+        />
+      )}
     </div>
   )
 }

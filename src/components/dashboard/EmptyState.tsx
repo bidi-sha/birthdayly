@@ -21,7 +21,7 @@ export default function EmptyState({ variant, onAddClick }: EmptyStateProps) {
           : 'Add your first birthday to get started and never miss a special day.'}
       </p>
       {!isNoResults && (
-        <Button className="mt-5" onClick={onAddClick} disabled title="Coming in Phase 10">
+        <Button className="mt-5" onClick={onAddClick}>
           + Add Birthday
         </Button>
       )}

@@ -7,6 +7,8 @@ import type { BirthdayWithMeta } from '@/types/birthday'
 
 interface BirthdayCardProps {
   birthday: BirthdayWithMeta
+  onEdit: (birthday: BirthdayWithMeta) => void
+  onDelete: (birthday: BirthdayWithMeta) => void
 }
 
 function badgeTone(daysUntil: number): 'purple' | 'pink' | 'neutral' {
@@ -15,7 +17,7 @@ function badgeTone(daysUntil: number): 'purple' | 'pink' | 'neutral' {
   return 'neutral'
 }
 
-export default function BirthdayCard({ birthday }: BirthdayCardProps) {
+export default function BirthdayCard({ birthday, onEdit, onDelete }: BirthdayCardProps) {
   const initial = birthday.name.charAt(0).toUpperCase()
 
   return (
@@ -39,16 +41,16 @@ export default function BirthdayCard({ birthday }: BirthdayCardProps) {
 
       <div className="flex items-center gap-1 shrink-0">
         <button
-          className="text-gray-400 hover:text-[var(--color-primary)] p-1.5 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-40"
-          disabled
-          title="Coming in Phase 10"
+          onClick={() => onEdit(birthday)}
+          className="text-gray-400 hover:text-[var(--color-primary)] p-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+          aria-label={`Edit ${birthday.name}`}
         >
           <Pencil size={15} />
         </button>
         <button
-          className="text-gray-400 hover:text-red-500 p-1.5 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-40"
-          disabled
-          title="Coming in Phase 10"
+          onClick={() => onDelete(birthday)}
+          className="text-gray-400 hover:text-red-500 p-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+          aria-label={`Delete ${birthday.name}`}
         >
           <Trash2 size={15} />
         </button>
