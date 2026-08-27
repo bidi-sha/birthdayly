@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search, Plus } from 'lucide-react'
+import { Search, Plus, X } from 'lucide-react'
 import Chip from '@/components/ui/Chip'
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
@@ -48,6 +48,13 @@ export default function DashboardClient({ birthdays, greetingName }: DashboardCl
 
   const thisMonthCount = useMemo(() => birthdays.filter((b) => b.isThisMonth).length, [birthdays])
 
+  const hasActiveFilters = search.trim() !== '' || filter !== 'all'
+
+  const clearFilters = () => {
+    setSearch('')
+    setFilter('all')
+  }
+
   const refreshAndClose = (closeFn: () => void) => {
     closeFn()
     router.refresh()
@@ -74,8 +81,17 @@ export default function DashboardClient({ birthdays, greetingName }: DashboardCl
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search birthdays..."
-            className="w-full rounded-xl border border-[var(--color-border)] pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
+            className="w-full rounded-xl border border-[var(--color-border)] pl-10 pr-9 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
           />
+          {search && (
+            <button
+              onClick={() => setSearch('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              aria-label="Clear search"
+            >
+              <X size={15} />
+            </button>
+          )}
         </div>
         <Button onClick={() => setAddOpen(true)} className="shrink-0 flex items-center gap-1.5">
           <Plus size={16} />
@@ -83,14 +99,31 @@ export default function DashboardClient({ birthdays, greetingName }: DashboardCl
         </Button>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-1">
-        <Chip active={filter === 'all'} onClick={() => setFilter('all')}>All</Chip>
-        <Chip active={filter === 'month'} onClick={() => setFilter('month')}>This Month</Chip>
-        <Chip active={filter === '3months'} onClick={() => setFilter('3months')}>Next 3 Months</Chip>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          <Chip active={filter === 'all'} onClick={() => setFilter('all')}>All</Chip>
+          <Chip active={filter === 'month'} onClick={() => setFilter('month')}>This Month</Chip>
+          <Chip active={filter === '3months'} onClick={() => setFilter('3months')}>Next 3 Months</Chip>
+        </div>
+        {hasActiveFilters && (
+          <button
+            onClick={clearFilters}
+            className="text-xs font-medium text-[var(--color-primary)] hover:underline shrink-0 whitespace-nowrap"
+          >
+            Clear Filter
+          </button>
+        )}
       </div>
 
       <div>
-        <h2 className="text-sm font-semibold text-gray-700 mb-3">Upcoming Birthdays</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-semibold text-gray-700">Upcoming Birthdays</h2>
+          {hasActiveFilters && (
+            <span className="text-xs text-gray-400">
+              {filteredBirthdays.length} of {birthdays.length}
+            </span>
+          )}
+        </div>
         {filteredBirthdays.length === 0 ? (
           <EmptyState
             variant={birthdays.length === 0 ? 'no-birthdays' : 'no-results'}
@@ -110,7 +143,6 @@ export default function DashboardClient({ birthdays, greetingName }: DashboardCl
         )}
       </div>
 
-      {/* Add Birthday modal */}
       <Modal isOpen={addOpen} onClose={() => setAddOpen(false)} title="Add New Birthday">
         <BirthdayForm
           mode="add"
@@ -119,7 +151,6 @@ export default function DashboardClient({ birthdays, greetingName }: DashboardCl
         />
       </Modal>
 
-      {/* Edit Birthday modal */}
       <Modal isOpen={!!editTarget} onClose={() => setEditTarget(null)} title="Edit Birthday">
         {editTarget && (
           <BirthdayForm
@@ -131,7 +162,6 @@ export default function DashboardClient({ birthdays, greetingName }: DashboardCl
         )}
       </Modal>
 
-      {/* Delete confirmation */}
       {deleteTarget && (
         <DeleteConfirmDialog
           isOpen={!!deleteTarget}
