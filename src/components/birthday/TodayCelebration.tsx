@@ -1,3 +1,6 @@
+'use client'
+
+import { motion } from 'framer-motion'
 import BearMascot from '@/components/ui/BearMascot'
 import Button from '@/components/ui/Button'
 import type { BirthdayWithMeta } from '@/types/birthday'
@@ -13,8 +16,18 @@ export default function TodayCelebration({ birthdays }: TodayCelebrationProps) {
   const [first, ...rest] = birthdays
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-pink-light)] rounded-[var(--radius-card)] p-6 flex flex-col items-center text-center">
-      <BearMascot variant="party" size={110} />
+    <motion.div
+      initial={{ opacity: 0, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+      className="relative overflow-hidden bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-pink-light)] rounded-[var(--radius-card)] p-6 flex flex-col items-center text-center"
+    >
+      <motion.div
+        animate={{ rotate: [0, -6, 6, -4, 4, 0] }}
+        transition={{ duration: 1.2, delay: 0.4, ease: 'easeInOut' }}
+      >
+        <BearMascot variant="party" size={110} />
+      </motion.div>
       <h3 className="text-xl font-bold text-gray-900 mt-2">
         It&apos;s {first.name}&apos;s Birthday! 🎉
       </h3>
@@ -30,6 +43,6 @@ export default function TodayCelebration({ birthdays }: TodayCelebrationProps) {
       <Button variant="primary" className="mt-4" disabled title="Coming soon">
         Send Wishes 💌
       </Button>
-    </div>
+    </motion.div>
   )
 }

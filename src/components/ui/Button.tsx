@@ -1,6 +1,9 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react'
+'use client'
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+import { ButtonHTMLAttributes, ReactNode } from 'react'
+import { motion, HTMLMotionProps } from 'framer-motion'
+
+interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'destructive'
   fullWidth?: boolean
   children: ReactNode
@@ -18,10 +21,14 @@ export default function Button({
   fullWidth = false,
   className = '',
   children,
+  disabled,
   ...props
 }: ButtonProps) {
   return (
-    <button
+    <motion.button
+      whileTap={!disabled ? { scale: 0.97 } : undefined}
+      transition={{ duration: 0.1 }}
+      disabled={disabled}
       className={`
         rounded-xl px-4 py-2.5 text-sm font-medium transition-colors
         disabled:opacity-50 disabled:cursor-not-allowed
@@ -32,6 +39,6 @@ export default function Button({
       {...props}
     >
       {children}
-    </button>
+    </motion.button>
   )
 }
