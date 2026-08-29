@@ -2,7 +2,8 @@ import Link from 'next/link'
 import { signup } from './actions'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
-import BearMascot from '@/components/ui/BearMascot'
+import PasswordInput from '@/components/ui/PasswordInput'
+import AssetPlaceholder from '@/components/ui/AssetPlaceholder'
 
 export default async function SignupPage({
   searchParams,
@@ -12,12 +13,14 @@ export default async function SignupPage({
   const { error } = await searchParams
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-[var(--radius-card)] shadow-sm p-8 relative overflow-visible">
-        <BearMascot variant="gift" size={90} className="absolute -top-10 right-6" />
-
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Create your account 💜</h1>
-        <p className="text-gray-500 mb-6">Start adding birthdays and never miss a special day again.</p>
+    <div className="min-h-screen flex items-center justify-center bg-white px-6 py-8">
+      <div className="w-full max-w-md">
+        <h1 className="font-heading font-extrabold text-2xl text-[var(--color-heading)] mb-1">
+          Create your account 💜
+        </h1>
+        <p className="text-gray-500 text-sm mb-6 max-w-xs">
+          Start adding birthdays and never miss a special day again
+        </p>
 
         {error && (
           <div className="mb-4 rounded-xl bg-red-50 text-red-600 text-sm px-4 py-3">
@@ -26,10 +29,36 @@ export default async function SignupPage({
         )}
 
         <form action={signup} className="space-y-4">
-          <Input id="fullName" name="fullName" type="text" label="Full name" required placeholder="Enter your name" />
-          <Input id="email" name="email" type="email" label="Email" required placeholder="you@example.com" />
-          <Input id="password" name="password" type="password" label="Password" required minLength={6} placeholder="Create a password" />
-          <Button type="submit" fullWidth>Sign up</Button>
+          <Input
+            id="fullName"
+            name="fullName"
+            type="text"
+            label="Full Name"
+            required
+            placeholder="Emma Watson"
+          />
+
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            label="Email"
+            required
+            placeholder="emma@example.com"
+          />
+
+          <PasswordInput
+            id="password"
+            name="password"
+            label="Password"
+            required
+            minLength={6}
+            placeholder="Create passwords"
+          />
+
+          <Button type="submit" fullWidth>
+            Sign up ✨
+          </Button>
         </form>
 
         <div className="flex items-center gap-3 my-6">
@@ -38,9 +67,15 @@ export default async function SignupPage({
           <div className="h-px bg-[var(--color-border)] flex-1" />
         </div>
 
-        <Button variant="secondary" fullWidth type="button" disabled title="Coming soon">
-          Continue with Google
-        </Button>
+        <button
+          type="button"
+          disabled
+          title="Google sign-in coming soon"
+          className="w-full flex items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] py-2.5 text-sm font-medium text-gray-500 disabled:opacity-70"
+        >
+          <AssetPlaceholder label="G" width={18} height={18} className="text-[9px] rounded-full" />
+          Google Account
+        </button>
 
         <p className="text-sm text-gray-500 text-center mt-6">
           Already have an account?{' '}

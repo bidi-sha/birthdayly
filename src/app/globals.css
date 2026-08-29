@@ -7,8 +7,15 @@
   --color-bg: #F2EEFB;
   --color-pink: #EC4899;
   --color-pink-light: #FCE7F3;
+  --color-yellow: #D97706;
+  --color-yellow-light: #FEF3C7;
+  --color-green: #16A34A;
+  --color-green-light: #DCFCE7;
+  --color-orange: #EA580C;
+  --color-orange-light: #FFEDD5;
   --color-text: #1F2937;
   --color-text-muted: #6B7280;
+  --color-text-muted-purple: #6B5B95;
   --color-border: #E5E7EB;
   --color-heading: #2A1E4A;
   --radius-card: 20px;
