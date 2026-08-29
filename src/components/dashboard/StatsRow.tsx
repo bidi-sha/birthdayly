@@ -20,17 +20,18 @@ export default function StatsRow({ total, thisMonth, today }: StatsRowProps) {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-3 gap-2 sm:gap-3">
       {stats.map(({ label, value, icon: Icon, tone }) => (
         <div
           key={label}
-          className="bg-white rounded-2xl border border-[var(--color-border)] p-4 flex flex-col items-center justify-center gap-1"
+          className="bg-white rounded-2xl border border-[var(--color-border)] p-3 sm:p-4 flex flex-col items-center justify-center gap-1"
         >
-          <div className={`w-9 h-9 rounded-full flex items-center justify-center ${toneStyles[tone]}`}>
-            <Icon size={16} />
+          <div className={`w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center ${toneStyles[tone]}`}>
+            <Icon size={14} className="sm:hidden" />
+            <Icon size={16} className="hidden sm:block" />
           </div>
-          <span className="text-xl font-bold text-gray-900">{value}</span>
-          <span className="text-xs text-gray-500">{label}</span>
+          <span className="text-lg sm:text-xl font-bold text-gray-900">{value}</span>
+          <span className="text-[11px] sm:text-xs text-gray-500 text-center">{label}</span>
         </div>
       ))}
     </div>

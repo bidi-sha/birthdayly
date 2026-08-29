@@ -38,18 +38,17 @@ export default function BirthdayCard({ birthday, onEdit, onDelete }: BirthdayCar
       <Badge tone={badgeTone(birthday.daysUntil)}>
         {birthday.isToday ? '🎉' : birthday.daysUntil}
       </Badge>
-
       <div className="flex items-center gap-1 shrink-0">
         <button
           onClick={() => onEdit(birthday)}
-          className="text-gray-400 hover:text-[var(--color-primary)] p-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+          className="text-gray-400 hover:text-[var(--color-primary)] p-2.5 rounded-lg hover:bg-gray-50 transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center"
           aria-label={`Edit ${birthday.name}`}
         >
           <Pencil size={15} />
         </button>
         <button
           onClick={() => onDelete(birthday)}
-          className="text-gray-400 hover:text-red-500 p-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+          className="text-gray-400 hover:text-red-500 p-2.5 rounded-lg hover:bg-gray-50 transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center"
           aria-label={`Delete ${birthday.name}`}
         >
           <Trash2 size={15} />

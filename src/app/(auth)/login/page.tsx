@@ -12,7 +12,7 @@ export default async function LoginPage({
   const { error } = await searchParams
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md bg-white rounded-[var(--radius-card)] shadow-sm p-8 relative overflow-visible">
         <BearMascot variant="wave" size={90} className="absolute -top-10 right-6" />
 

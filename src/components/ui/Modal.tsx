@@ -24,7 +24,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
           transition={{ duration: 0.2 }}
         >
           <motion.div
-            className="w-full max-w-md rounded-[var(--radius-card)] bg-white p-6 shadow-lg"
+           className="w-full max-w-md rounded-[var(--radius-card)] bg-white p-6 shadow-lg max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
             initial={{ opacity: 0, scale: 0.95, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
