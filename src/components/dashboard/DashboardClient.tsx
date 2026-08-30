@@ -4,7 +4,6 @@ import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Bell, Plus, ChevronRight } from 'lucide-react'
-import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import StatsRow from './StatsRow'
 import EmptyState from './EmptyState'
@@ -27,9 +26,6 @@ export default function DashboardClient({ birthdays, greetingName }: DashboardCl
   const [addedId, setAddedId] = useState<string | null>(null)
   const [editTarget, setEditTarget] = useState<BirthdayWithMeta | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<BirthdayWithMeta | null>(null)
-
-  const hour = new Date().getHours()
-  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
 
   const todayBirthdays = useMemo(() => birthdays.filter((b) => b.isToday), [birthdays])
   const thisMonthCount = useMemo(() => birthdays.filter((b) => b.isThisMonth).length, [birthdays])

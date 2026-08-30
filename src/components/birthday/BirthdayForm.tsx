@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useState, useTransition } from 'react'
@@ -7,6 +8,7 @@ import CategoryChips from '@/components/ui/CategoryChips'
 import AssetPlaceholder from '@/components/ui/AssetPlaceholder'
 import { addBirthday, updateBirthday, type ActionResult } from '@/app/(dashboard)/dashboard/actions'
 import type { Birthday } from '@/types/birthday'
+import { useToast } from '@/components/ui/Toast'
 
 interface BirthdayFormProps {
   mode: 'add' | 'edit'
@@ -16,13 +18,21 @@ interface BirthdayFormProps {
   onCancel: () => void
 }
 
-export default function BirthdayForm({ mode, birthday, onSuccess, onAdded, onCancel }: BirthdayFormProps) {
+export default function BirthdayForm({
+  mode,
+  birthday,
+  onSuccess,
+  onAdded,
+  onCancel,
+}: BirthdayFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [category, setCategory] = useState(birthday?.category ?? 'All')
   const [isPending, startTransition] = useTransition()
+  const { showToast } = useToast()
 
   const handleSubmit = (formData: FormData) => {
     setError(null)
+
     startTransition(async () => {
       const result: ActionResult =
         mode === 'add'
@@ -37,6 +47,7 @@ export default function BirthdayForm({ mode, birthday, onSuccess, onAdded, onCan
       if (mode === 'add' && result.id && onAdded) {
         onAdded(result.id)
       } else {
+        showToast('Birthday updated ✨')
         onSuccess?.()
       }
     })
@@ -46,13 +57,29 @@ export default function BirthdayForm({ mode, birthday, onSuccess, onAdded, onCan
     <form action={handleSubmit} className="space-y-4">
       {mode === 'add' && (
         <div className="flex justify-center">
-          <AssetPlaceholder label="Add birthday illustration" width={140} height={70} />
+          <AssetPlaceholder
+            label="Add birthday illustration"
+            width={140}
+            height={70}
+          />
         </div>
       )}
 
-      {error && <div className="rounded-xl bg-red-50 text-red-600 text-sm px-4 py-3">{error}</div>}
+      {error && (
+        <div className="rounded-xl bg-red-50 text-red-600 text-sm px-4 py-3">
+          {error}
+        </div>
+      )}
 
-      <Input id="name" name="name" label="Name" required placeholder="Enter name" defaultValue={birthday?.name} />
+      <Input
+        id="name"
+        name="name"
+        label="Name"
+        required
+        placeholder="Enter name"
+        defaultValue={birthday?.name}
+      />
+
       <Input
         id="birthday"
         name="birthday"
@@ -61,6 +88,7 @@ export default function BirthdayForm({ mode, birthday, onSuccess, onAdded, onCan
         required
         defaultValue={birthday?.birthday}
       />
+
       <Input
         id="birth_year"
         name="birth_year"
@@ -73,13 +101,22 @@ export default function BirthdayForm({ mode, birthday, onSuccess, onAdded, onCan
       />
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">Category / Group</label>
-        <CategoryChips name="category" value={category} onChange={setCategory} />
+        <label className="block text-sm font-medium text-gray-700 mb-1.5">
+          Category / Group
+        </label>
+        <CategoryChips
+          name="category"
+          value={category}
+          onChange={setCategory}
+        />
       </div>
 
       {mode === 'edit' && (
         <div>
-          <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="notes"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Notes
           </label>
           <textarea
@@ -94,13 +131,25 @@ export default function BirthdayForm({ mode, birthday, onSuccess, onAdded, onCan
       )}
 
       <div className="flex gap-3 pt-2">
-        <Button type="button" variant="secondary" fullWidth onClick={onCancel} disabled={isPending}>
+        <Button
+          type="button"
+          variant="secondary"
+          fullWidth
+          onClick={onCancel}
+          disabled={isPending}
+        >
           Cancel
         </Button>
+
         <Button type="submit" fullWidth disabled={isPending}>
-          {isPending ? 'Saving...' : mode === 'add' ? 'Add Birthday 🎉' : 'Save Changes ✨'}
+          {isPending
+            ? 'Saving...'
+            : mode === 'add'
+              ? 'Add Birthday 🎉'
+              : 'Save Changes ✨'}
         </Button>
       </div>
     </form>
   )
 }
+

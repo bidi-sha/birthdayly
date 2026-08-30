@@ -11,6 +11,6 @@ export default async function Home() {
     redirect('/dashboard')
   }
 
-  redirect('/login')
+  redirect('/onboarding')
 }
 

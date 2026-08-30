@@ -30,3 +30,98 @@ body {
 .font-heading {
   font-family: var(--font-heading), sans-serif;
 }
+/* =========================================================
+   Birthdayly Dark Theme
+   ========================================================= */
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+html[data-theme='dark'] body {
+  color: #f3f4f6;
+}
+
+/* White cards */
+html[data-theme='dark'] .bg-white {
+  background-color: #1f1b2e;
+}
+
+/* Light gray backgrounds */
+html[data-theme='dark'] .bg-gray-50 {
+  background-color: #272238;
+}
+
+html[data-theme='dark'] .bg-gray-100 {
+  background-color: #302a42;
+}
+
+/* Borders */
+html[data-theme='dark'] .border-gray-200,
+html[data-theme='dark'] .border-gray-300 {
+  border-color: #403951;
+}
+
+/* Text */
+html[data-theme='dark'] .text-gray-900 {
+  color: #f9fafb;
+}
+
+html[data-theme='dark'] .text-gray-800 {
+  color: #f3f4f6;
+}
+
+html[data-theme='dark'] .text-gray-700 {
+  color: #e5e7eb;
+}
+
+html[data-theme='dark'] .text-gray-600 {
+  color: #d1d5db;
+}
+
+html[data-theme='dark'] .text-gray-500 {
+  color: #9ca3af;
+}
+
+html[data-theme='dark'] .text-gray-400 {
+  color: #9ca3af;
+}
+
+/* Inputs */
+html[data-theme='dark'] input,
+html[data-theme='dark'] textarea,
+html[data-theme='dark'] select {
+  background-color: #1f1b2e;
+  color: #f9fafb;
+  border-color: #403951;
+}
+
+html[data-theme='dark'] input::placeholder,
+html[data-theme='dark'] textarea::placeholder {
+  color: #8b8499;
+}
+
+/* Hover states */
+html[data-theme='dark'] .hover\:bg-gray-50:hover {
+  background-color: #302a42;
+}
+
+/* Navigation */
+html[data-theme='dark'] nav {
+  background-color: #181522;
+}
+
+html[data-theme='dark'] aside {
+  background-color: #181522;
+}
+
+/* Modal */
+html[data-theme='dark'] [role='dialog'] > div {
+  background-color: #1f1b2e;
+}
+
+/* Keep the app background visible */
+html[data-theme='dark'] body {
+  background: transparent;
+}
+

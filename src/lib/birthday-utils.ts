@@ -2,30 +2,22 @@ import {
   startOfDay,
   differenceInCalendarDays,
   isLeapYear,
+  isSameDay,
   getMonth,
   getDate,
   getYear,
 } from 'date-fns'
 import type { Birthday, BirthdayWithMeta } from '@/types/birthday'
 
-const FEB = 1 // date-fns/JS Date months are 0-indexed
+const FEB = 1
 
-/**
- * Given a birthday's month/day and a target year, returns the date to
- * celebrate it on that year — handling Feb 29 by falling back to Feb 28
- * in non-leap years.
- */
-function resolveDateForYear(month: number, day: number, year: number): Date {
+export function resolveDateForYear(month: number, day: number, year: number): Date {
   if (month === FEB && day === 29 && !isLeapYear(new Date(year, FEB, 1))) {
     return new Date(year, FEB, 28)
   }
   return new Date(year, month, day)
 }
 
-/**
- * Finds the next occurrence of a birthday on or after `today`.
- * If this year's date has already passed, rolls forward to next year.
- */
 export function getNextOccurrence(birthdayDateStr: string, today: Date = new Date()): Date {
   const todayStart = startOfDay(today)
   const source = new Date(birthdayDateStr)
@@ -58,13 +50,9 @@ export function isBirthdayThisMonth(birthdayDateStr: string, today: Date = new D
 
 export function isBirthdayWithinNext3Months(birthdayDateStr: string, today: Date = new Date()): boolean {
   const days = getDaysUntil(birthdayDateStr, today)
-  // ~3 months, generously covering month-length variation
   return days >= 0 && days <= 92
 }
 
-/**
- * Age the person will turn on their next occurrence, if birth_year is known.
- */
 export function getUpcomingAge(
   birthYear: number | null,
   birthdayDateStr: string,
@@ -76,9 +64,18 @@ export function getUpcomingAge(
 }
 
 /**
- * Takes raw Birthday rows and returns them enriched with all calculated
- * fields, sorted by soonest upcoming birthday first.
+ * Checks whether a birthday (month/day, Feb-29-aware) falls on a specific
+ * calendar date, in that date's own year — used by the Calendar screen
+ * when browsing arbitrary months, not just "next occurrence."
  */
+export function fallsOnDate(birthdayDateStr: string, date: Date): boolean {
+  const source = new Date(birthdayDateStr)
+  const month = getMonth(source)
+  const day = getDate(source)
+  const target = resolveDateForYear(month, day, getYear(date))
+  return isSameDay(target, date)
+}
+
 export function enrichAndSortBirthdays(
   birthdays: Birthday[],
   today: Date = new Date()
