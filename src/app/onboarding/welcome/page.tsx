@@ -1,6 +1,6 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import AppBackground from '@/components/layout/AppBackground'
-import AssetPlaceholder from '@/components/ui/AssetPlaceholder'
 import DotsIndicator from '@/components/ui/DotsIndicator'
 import Button from '@/components/ui/Button'
 
@@ -11,7 +11,13 @@ export default function OnboardingWelcomePage() {
         <div />
 
         <div className="flex flex-col items-center gap-5 max-w-xs">
-          <AssetPlaceholder label="Welcome illustration" width={140} height={140} />
+          <Image
+            src="/images/welcome-illustration.svg"
+            alt="Birthday Reminder welcome illustration"
+            width={140}
+            height={140}
+            priority
+          />
 
           <h1 className="font-heading font-extrabold text-2xl text-[var(--color-heading)]">
             Welcome to BirthDay!
@@ -24,6 +30,7 @@ export default function OnboardingWelcomePage() {
 
         <div className="flex flex-col items-center gap-6 w-full max-w-xs">
           <DotsIndicator total={3} activeIndex={0} />
+
           <Link href="/login" className="w-full">
             <Button fullWidth>Get Started ✨</Button>
           </Link>
