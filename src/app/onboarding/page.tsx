@@ -1,9 +1,9 @@
 'use client'
 
+import Image from 'next/image'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import AppBackground from '@/components/layout/AppBackground'
-import AssetPlaceholder from '@/components/ui/AssetPlaceholder'
 
 export default function OnboardingSplashPage() {
   const router = useRouter()
@@ -21,20 +21,33 @@ export default function OnboardingSplashPage() {
         aria-label="Continue to welcome screen"
       >
         <div />
+
         <div className="flex flex-col items-center gap-6 max-w-sm">
           <h1 className="font-heading font-extrabold text-4xl leading-[1.05] text-[var(--color-heading)]">
             BirthDay
             <br />
             Reminder App
           </h1>
+
           <p className="font-heading font-bold text-[var(--color-primary)] text-lg">
             Never miss a special day ✨
           </p>
+
           <div className="w-full flex justify-center py-6">
-            <AssetPlaceholder label="Splash illustration" width={220} height={155} />
+            <Image
+              src="/images/splash-illustration.svg"
+              alt="Birthday Reminder"
+              width={220}
+              height={155}
+              priority
+            />
           </div>
-          <p className="text-sm text-[var(--color-text-muted)]">Reminders with a warm hug 💜</p>
+
+          <p className="text-sm text-[var(--color-text-muted)]">
+            Reminders with a warm hug 💜
+          </p>
         </div>
+
         <div className="w-10 h-1.5 rounded-full bg-[var(--color-heading)]" />
       </button>
     </AppBackground>
