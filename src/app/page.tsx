@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation'
+/*import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function Home() {
@@ -12,5 +12,12 @@ export default async function Home() {
   }
 
   redirect('/onboarding')
+}*/
+
+import { redirect } from 'next/navigation'
+
+export default function Home() {
+  redirect('/onboarding')
 }
+
 
