@@ -1,3 +1,4 @@
+
 'use client'
 
 import { format } from 'date-fns'
@@ -25,28 +26,52 @@ function avatarStyleForName(name: string) {
   return AVATAR_PALETTE[idx]
 }
 
-function badgeTone(daysUntil: number): 'purple' | 'pink' | 'neutral' | 'green' | 'orange' {
+function badgeTone(
+  daysUntil: number
+): 'purple' | 'pink' | 'neutral' | 'green' | 'orange' {
   if (daysUntil === 0) return 'pink'
   if (daysUntil <= 3) return 'green'
   if (daysUntil <= 10) return 'orange'
   return 'neutral'
 }
 
-export default function BirthdayCard({ birthday, onEdit, onDelete, linkToDetail = false }: BirthdayCardProps) {
+export default function BirthdayCard({
+  birthday,
+  onEdit,
+  onDelete,
+  linkToDetail = false,
+}: BirthdayCardProps) {
   const initial = birthday.name.charAt(0).toUpperCase()
   const avatarStyle = avatarStyleForName(birthday.name)
 
   const content = (
     <div className="flex items-center gap-3 bg-white rounded-2xl border border-[var(--color-border)] p-4 hover:shadow-sm transition-shadow">
-      <div className={`w-11 h-11 rounded-full ${avatarStyle.bg} ${avatarStyle.text} flex items-center justify-center font-semibold shrink-0`}>
-        {initial}
-      </div>
+      {birthday.profilePictureUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={birthday.profilePictureUrl}
+          alt=""
+          loading="lazy"
+          className="w-11 h-11 rounded-full object-cover shrink-0"
+        />
+      ) : (
+        <div
+          className={`w-11 h-11 rounded-full ${avatarStyle.bg} ${avatarStyle.text} flex items-center justify-center font-semibold shrink-0`}
+        >
+          {initial}
+        </div>
+      )}
 
       <div className="flex-1 min-w-0">
-        <p className="font-medium text-gray-900 truncate">{birthday.name}</p>
+        <p className="font-medium text-gray-900 truncate">
+          {birthday.name}
+        </p>
+
         <p className="text-xs text-gray-500">
           {format(birthday.nextOccurrence, 'd MMM')}
-          {birthday.upcomingAge ? ` · Turning ${birthday.upcomingAge}` : ''}
+          {birthday.upcomingAge
+            ? ` · Turning ${birthday.upcomingAge}`
+            : ''}
         </p>
       </div>
 
@@ -65,6 +90,7 @@ export default function BirthdayCard({ birthday, onEdit, onDelete, linkToDetail 
         >
           <Pencil size={15} />
         </button>
+
         <button
           onClick={(e) => {
             e.preventDefault()
@@ -80,7 +106,12 @@ export default function BirthdayCard({ birthday, onEdit, onDelete, linkToDetail 
   )
 
   if (linkToDetail) {
-    return <Link href={`/dashboard/birthdays/${birthday.id}`}>{content}</Link>
+    return (
+      <Link href={`/dashboard/birthdays/${birthday.id}`}>
+        {content}
+      </Link>
+    )
   }
+
   return content
 }

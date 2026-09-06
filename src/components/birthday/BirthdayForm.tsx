@@ -1,4 +1,5 @@
 
+
 'use client'
 
 import { useState, useTransition } from 'react'
@@ -6,13 +7,14 @@ import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import CategoryChips from '@/components/ui/CategoryChips'
 import AssetPlaceholder from '@/components/ui/AssetPlaceholder'
+import ProfilePictureUploader from './ProfilePictureUploader'
 import { addBirthday, updateBirthday, type ActionResult } from '@/app/(dashboard)/dashboard/actions'
-import type { Birthday } from '@/types/birthday'
+import type { BirthdayWithMeta } from '@/types/birthday'
 import { useToast } from '@/components/ui/Toast'
 
 interface BirthdayFormProps {
   mode: 'add' | 'edit'
-  birthday?: Birthday
+  birthday?: BirthdayWithMeta
   onSuccess?: () => void
   onAdded?: (id: string) => void
   onCancel: () => void
@@ -68,6 +70,16 @@ export default function BirthdayForm({
       {error && (
         <div className="rounded-xl bg-red-50 text-red-600 text-sm px-4 py-3">
           {error}
+        </div>
+      )}
+
+      {mode === 'edit' && birthday && (
+        <div className="flex justify-center pb-1">
+          <ProfilePictureUploader
+            birthdayId={birthday.id}
+            imageUrl={birthday.profilePictureUrl ?? null}
+            size={84}
+          />
         </div>
       )}
 

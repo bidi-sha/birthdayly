@@ -8,42 +8,43 @@ import { ArrowLeft } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
 import Modal from '@/components/ui/Modal'
-import AssetPlaceholder from '@/components/ui/AssetPlaceholder'
+import ProfilePictureUploader from './ProfilePictureUploader'
+import MemoriesGallery from './MemoriesGallery'
 import BirthdayForm from './BirthdayForm'
 import DeleteConfirmDialog from './DeleteConfirmDialog'
 import type { BirthdayWithMeta } from '@/types/birthday'
+import type { MemoryWithUrl } from '@/types/memory'
 
-export default function BirthdayDetailClient({ birthday }: { birthday: BirthdayWithMeta }) {
+interface BirthdayDetailClientProps {
+  birthday: BirthdayWithMeta
+  memories: MemoryWithUrl[]
+}
+
+export default function BirthdayDetailClient({ birthday, memories }: BirthdayDetailClientProps) {
   const router = useRouter()
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
-
-  const pronoun = 'their' // birthdays table has no gender field — kept neutral
+  const pronoun = 'their'
 
   return (
     <div className="p-4 md:p-8 max-w-md mx-auto space-y-5">
       <div className="flex items-center justify-between">
-        <Link
-          href="/dashboard/birthdays"
-          className="w-9 h-9 rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)] flex items-center justify-center"
-          aria-label="Back"
-        >
+        <Link href="/dashboard/birthdays" className="w-9 h-9 rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)] flex items-center justify-center" aria-label="Back">
           <ArrowLeft size={18} />
         </Link>
       </div>
 
       <div className="flex flex-col items-center text-center gap-3">
-        <AssetPlaceholder label="Profile illustration" width={110} height={110} className="rounded-full" />
+        <ProfilePictureUploader birthdayId={birthday.id} imageUrl={birthday.profilePictureUrl ?? null} size={110} />
         <h1 className="font-heading font-bold text-xl text-[var(--color-heading)]">{birthday.name}</h1>
         {birthday.category && <Badge tone="pink">{birthday.category}</Badge>}
       </div>
 
-      {!birthday.isToday && (
+      {!birthday.isToday ? (
         <div className="rounded-xl bg-[var(--color-yellow-light)] text-[var(--color-yellow)] text-sm font-medium text-center px-4 py-3">
           🎂 {birthday.daysUntil} day{birthday.daysUntil === 1 ? '' : 's'} left until {pronoun} special day!
         </div>
-      )}
-      {birthday.isToday && (
+      ) : (
         <div className="rounded-xl bg-[var(--color-pink-light)] text-[var(--color-pink)] text-sm font-medium text-center px-4 py-3">
           🎉 It&apos;s {birthday.name}&apos;s birthday today!
         </div>
@@ -71,13 +72,11 @@ export default function BirthdayDetailClient({ birthday }: { birthday: BirthdayW
       </div>
 
       <div className="flex gap-3">
-        <Button variant="secondary" fullWidth onClick={() => setEditOpen(true)}>
-          Edit Details
-        </Button>
-        <Button variant="destructive" fullWidth onClick={() => setDeleteOpen(true)}>
-          Delete Reminders
-        </Button>
+        <Button variant="secondary" fullWidth onClick={() => setEditOpen(true)}>Edit Details</Button>
+        <Button variant="destructive" fullWidth onClick={() => setDeleteOpen(true)}>Delete Reminders</Button>
       </div>
+
+      <MemoriesGallery birthdayId={birthday.id} memories={memories} />
 
       <Modal isOpen={editOpen} onClose={() => setEditOpen(false)} title="Edit Birthday">
         <BirthdayForm

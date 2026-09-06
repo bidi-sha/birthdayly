@@ -1,7 +1,9 @@
+
 'use server'
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { deleteAllMediaForBirthday } from '@/lib/supabase/storage'
 
 export type ActionResult =
   | { success: true; id?: string }
@@ -29,7 +31,14 @@ export async function addBirthday(formData: FormData): Promise<ActionResult> {
 
   const { data, error } = await supabase
     .from('birthdays')
-    .insert({ user_id: user.id, name, birthday, birth_year, category, notes })
+    .insert({
+      user_id: user.id,
+      name,
+      birthday,
+      birth_year,
+      category,
+      notes,
+    })
     .select('id')
     .single()
 
@@ -37,10 +46,14 @@ export async function addBirthday(formData: FormData): Promise<ActionResult> {
 
   revalidatePath('/dashboard')
   revalidatePath('/dashboard/birthdays')
+
   return { success: true, id: data.id }
 }
 
-export async function updateBirthday(id: string, formData: FormData): Promise<ActionResult> {
+export async function updateBirthday(
+  id: string,
+  formData: FormData
+): Promise<ActionResult> {
   const supabase = await createClient()
   const {
     data: { user },
@@ -62,7 +75,13 @@ export async function updateBirthday(id: string, formData: FormData): Promise<Ac
 
   const { error } = await supabase
     .from('birthdays')
-    .update({ name, birthday, birth_year, category, notes })
+    .update({
+      name,
+      birthday,
+      birth_year,
+      category,
+      notes,
+    })
     .eq('id', id)
     .eq('user_id', user.id)
 
@@ -71,6 +90,7 @@ export async function updateBirthday(id: string, formData: FormData): Promise<Ac
   revalidatePath('/dashboard')
   revalidatePath('/dashboard/birthdays')
   revalidatePath(`/dashboard/birthdays/${id}`)
+
   return { success: true }
 }
 
@@ -82,11 +102,20 @@ export async function deleteBirthday(id: string): Promise<ActionResult> {
 
   if (!user) return { success: false, error: 'You must be logged in.' }
 
-  const { error } = await supabase.from('birthdays').delete().eq('id', id).eq('user_id', user.id)
+  const { error } = await supabase
+    .from('birthdays')
+    .delete()
+    .eq('id', id)
+    .eq('user_id', user.id)
 
   if (error) return { success: false, error: error.message }
 
+  // Delete all profile and memory images from Supabase Storage
+  await deleteAllMediaForBirthday(user.id, id)
+
   revalidatePath('/dashboard')
   revalidatePath('/dashboard/birthdays')
+
   return { success: true }
 }
+
